@@ -15,7 +15,34 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from photoshare import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+
+    url(r'^$', views.Index.as_view()),
+
+    url(r'^account/register$', views.UserRegister.as_view()),
+    url(r'^account/login$', views.UserLogin.as_view()),
+    url(r'^account/logout$', views.UserLogout.as_view()),
+
+    url(r'^user/profile$', views.UserProfile.as_view()),
+    url(r'^user/(?P<userpk>\d{1,10})/$', views.UserView.as_view()),
+
+    url(r'^post/(?P<postpk>\d{1,10})/$', views.PostView.as_view()),
+    url(r'^post/create$', views.CreatePostView.as_view()),
+    url(r'^post/update/(?P<postpk>\d{1,10})/$', views.UpdatePostView.as_view()),
+    url(r'^post/delete/(?P<postpk>\d{1,10})/$', views.DeletePostView.as_view()),
+
+    url(r'^comment/create$', views.CreateCommentView.as_view()),
+    url(r'^comment/update/(?P<commentpk>\d{1,10})/$', views.UpdateCommentView.as_view()),
+    url(r'^comment/delete/(?P<commentpk>\d{1,10})/$', views.DeleteCommentView.as_view()),
+
+    url(r'^uploads/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': settings.MEDIA_ROOT,
+        }),
+
+    url(r'^community$', views.CommunityView.as_view()),
 ]

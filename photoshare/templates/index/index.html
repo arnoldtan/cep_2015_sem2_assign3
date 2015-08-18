@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}PhotoSharer{% endblock %}
+
+{% block stylesheets %}
+	<!--[if lte IE 8]>
+	  <link rel="stylesheet" href="static/css/index/grids-responsive-old-ie-min.css">
+	<![endif]-->
+	<!--[if gt IE 8]><!-->
+	  <link rel="stylesheet" href="/static/css/index/grids-responsive-min.css">
+	<!--<![endif]-->
+	<link rel="stylesheet" href="/static/css/index/font-awesome.css">
+	<!--[if lte IE 8]>
+	  <link rel="stylesheet" href="static/css/index/marketing-old-ie.css">
+	<![endif]-->
+	<!--[if gt IE 8]><!-->
+	  <link rel="stylesheet" href="/static/css/index/marketing.css">
+	<!--<![endif]-->
+
+	<link rel="stylesheet" href="/static/css/index/index.css">
+{% endblock %}
+
+{% block content %}
+<div class="header">
+  <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+    <div class="pure-g">
+    	<div class="pure-u-1-1">
+    		<a class="pure-menu-heading" href="">PhotoSharer</a>
+    	</div>
+    </div>
+    <div class="pure-g">
+    	<div class="pure-u-15-24">
+    	</div>
+    	<div class="pure-u-1-24">
+    		<form method="post" action="account/login" class="pure-form" id="loginform">
+    			<div style="display:none">
+					  <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+					</div>
+				  <fieldset>
+				    <input name="username" class="loginform--input" type="text" placeholder="Username" required>
+				    <input name="password" class="loginform--input" type="password" placeholder="Password" required>
+				    <button type="submit" class="pure-button pure-button-primary">Sign in</button>
+				  </fieldset>
+				</form>
+    	</div>
+    </div>
+  </div>
+</div>
+
+<div class="splash-container">
+  <div class="splash">
+    <h1 class="splash-head">PhotoSharer</h1>
+    <p class="splash-subhead">
+      Easily share photos with your friends, family and workers
+    </p>
+    <p>
+      <a href="#signupform" class="pure-button pure-button-primary">Get Started</a>
+    </p>
+  </div>
+</div>
+
+<div class="content-wrapper">
+  <div class="content">
+    <h2 class="content-head is-center">Key Features</h2>
+
+    <div class="pure-g">
+      <div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
+
+        <h3 class="content-subhead">
+          <i class="fa fa-rocket"></i>
+          Followers
+       	</h3>
+        <p>
+          Share photos only with the people you want by accepting followers. Receive latest photos from those you follow.
+        </p>
+      </div>
+      <div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
+        <h3 class="content-subhead">
+          <i class="fa fa-mobile"></i>
+          Comments
+        </h3>
+        <p>
+          Comment on photos and spark off meaningful discussions with other users.
+        </p>
+      </div>
+      <div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
+        <h3 class="content-subhead">
+          <i class="fa fa-th-large"></i>
+          Descriptions
+        </h3>
+        <p>
+          Add descriptions to your photos to allow your followers to better understand your photos.
+        </p>
+      </div>
+      <div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
+        <h3 class="content-subhead">
+          <i class="fa fa-check-square-o"></i>
+          Likes
+       	</h3>
+      	<p>
+          Simply express your love towards a photo by liking the photo.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <h2 class="content-head is-center">sign up and start sharing today!</h2>
+
+    <div class="pure-g">
+      <div class="l-box-lrg pure-u-1 pure-u-md-1-1">
+        <form method="post" action="/account/register" id="signupform" class="pure-form pure-form-stacked">
+        	<div style="display:none">
+					  <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+					</div>
+          <fieldset>
+
+            <label for="name">Your Username</label>
+            <input name="username" id="name" type="text" placeholder="Your Username" required>
+
+            <label for="password">Your Password</label>
+            <input name="password1" id="password" type="password" placeholder="Your Password" required>
+
+            <label for="password">Repeat Password</label>
+            <input name="password2" id="password" type="password" placeholder="Repeat Password" required>
+
+          	<button type="submit" class="pure-button">Sign Up</button>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer l-box is-center">
+    Layout made with love by the YUI Team.
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+	<script src="/static/js/index/index.js"></script>
+{% endblock %}

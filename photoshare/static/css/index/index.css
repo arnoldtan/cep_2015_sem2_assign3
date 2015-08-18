@@ -1,0 +1,18 @@
+#signupform {
+	width: 25%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.loginform--input {
+	margin-top: 1em;
+}
+
+.errors {
+	color: red;
+}
+
+#loginform ul {
+	margin: 0;
+	padding: 0;
+}

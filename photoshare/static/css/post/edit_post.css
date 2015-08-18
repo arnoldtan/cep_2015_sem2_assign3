@@ -1,0 +1,7 @@
+#description__header, #description__edit_button, #post__delete_form {
+	display: inline-block;
+}
+
+#description__header {
+	margin: 0;
+}
