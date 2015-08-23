@@ -13,24 +13,67 @@
 				<div class="pure-u-1-4">
 					<h2>Follow Requests({{ num_follow_requests }})</h2>
 					{% for follow_request in follow_requests %}
+						<li>
+							<a class="user_link" href="/user/{{ follow_request.follower.pk }}">{{ follow_request.follower.username }}</a>
+							<form class="accept_follow_form" method="get" action="/follow/accept/{{ follow_request.follower.pk }}">
+								<button class="pure-button button-success">Accept</button>
+							</form>
+							<form class="reject_follow_form" method="get" action="/follow/reject/{{ follow_request.follower.pk }}">
+								<button class="pure-button button-error">Reject</button>
+							</form>
+							<br>
+							<br>
+						</li>
 					{% endfor %}
 				</div>
 				<div class="pure-u-1-4">
 					<h2>Following({{ num_following }})</h2>
 					{% for following in following %}
+						<li>
+							<a class="user_link" href="/user/{{ following.followed.pk }}">{{ following.followed.username }}</a>
+							<form class="accept_follow_form" method="get" action="/follow/delete/{{ following.followed.pk }}">
+								<button class="pure-button button-error">Unfollow</button>
+							</form>
+							<br>
+							<br>
+						</li>
 					{% endfor %}
 				</div>
 				<div class="pure-u-1-4">
 					<h2>Followers({{ num_followers }})</h2>
 					{% for follower in followers %}
+						<li>
+							<a class="user_link" href="/user/{{ follower.follower.pk }}">{{ follower.follower.username }}</a>
+							<form class="accept_follow_form" method="get" action="/follow/reject/{{ follower.follower.pk }}">
+								<button class="pure-button button-error">Delete</button>
+							</form>
+							<br>
+							<br>
+						</li>
 					{% endfor %}
 				</div>
 				<div class="pure-u-1-4">
 					<h2>Other Users({{ num_other_users }})</h2>
 					<ul>
 						{% for other_user in other_users %}
-							<li class="user"><a href="/user/{{ other_user.pk }}">{{ other_user.username }}</a></li>
-
+							<li>
+								<a class="user_link" href="/user/{{ other_user.pk }}">{{ other_user.username }}</a>
+								<form class="add_follow_form" method="get" action="/follow/add/{{ other_user.pk }}">
+									<button class="pure-button button-secondary">Follow</button>
+								</form>
+								<br>
+								<br>
+							</li>
+						{% endfor %}
+						{% for following_request in following_requests %}
+							<li>
+								<a class="user_link" href="/user/{{ following_request.followed.pk }}">{{ following_request.followed.username }}</a>
+								<form class="delete_follow_form" method="get" action="/follow/delete/{{ following_request.followed.pk }}">
+									<button id="delete_follow_button_{{ following_request.followed.pk }}" class="pure-button button-warning" onmouseover="pendingToDelete({{ following_request.followed.pk }})" onmouseout="deleteToPending({{ following_request.followed.pk }})">Pending</button>
+								</form>
+								<br>
+								<br>
+							</li>
 						{% endfor %}
 					</ul>
 				</div>
@@ -40,4 +83,5 @@
 {% endblock %}
 
 {% block app_scripts %}
+	<script src="/static/js/community/community.js"></script>
 {% endblock %}

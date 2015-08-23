@@ -88,18 +88,43 @@ class UserView(View):
 	@method_decorator(login_required)
 	def get(self, request, userpk):
 		user = request.user
-		posts = Post.objects.all().filter(user=user).order_by('date').reverse()
-		followers = Follower.objects.all().filter(followed=user, accepted=True)
-		following = Follower.objects.all().filter(follower=user, accepted=True)
-		if int(str(userpk)) == request.user.pk:
+		user_profile = User.objects.get(pk=userpk)
+		posts = Post.objects.all().filter(user=user_profile).order_by('date').reverse()
+		followers = Follower.objects.all().filter(followed=user_profile, accepted=True)
+		following = Follower.objects.all().filter(follower=user_profile, accepted=True)
+		if int(str(userpk)) != request.user.pk:
+			allowed = Follower.objects.all().filter(followed=user_profile, follower=user, accepted=True)
+			if not allowed:
+				return render(request, "user/user_protected.html", {
+					'user': user_profile,
+					'posts': posts,
+					'followers': followers,
+					'following': following,
+					'num_posts': len(posts),
+					'num_followers': len(followers),
+					'num_following': len(following)
+				})
+			else:
+				return render(request, "user/user_profile.html", {
+					'user_profile': user_profile,
+					'posts': posts,
+					'followers': followers,
+					'following': following,
+					'num_posts': len(posts),
+					'num_followers': len(followers),
+					'num_following': len(following),
+					'owner': False
+				})
+		else:
 			return render(request, "user/user_profile.html", {
-				'user': user,
+				'user_profile': user_profile,
 				'posts': posts,
 				'followers': followers,
 				'following': following,
 				'num_posts': len(posts),
 				'num_followers': len(followers),
-				'num_following': len(following)
+				'num_following': len(following),
+				'owner': True
 			})
 
 class CreatePostView(View):
@@ -194,11 +219,13 @@ class CommunityView(View):
 		followers = Follower.objects.all().filter(followed=user, accepted=True)
 		following = Follower.objects.all().filter(follower=user, accepted=True)
 		follow_requests = Follower.objects.all().filter(followed=user, accepted=False)
+		following_requests = Follower.objects.all().filter(follower=user, accepted=False)
 		exclude_userpk = [o.followed.pk for o in following]
 		exclude_user = [o.followed for o in following]
 		overlap = followers.exclude(followed__in=exclude_user)
-		exclude_userpk += [o.following.pk for o in overlap]
+		exclude_userpk += [o.followed.pk for o in overlap]
 		exclude_userpk += [ user.pk ]
+		exclude_userpk += [o.followed.pk for o in following_requests]
 		other_users = User.objects.all().exclude(pk__in=exclude_userpk)
 		return render(request, "community/community.html", {
 			'user': user,
@@ -207,9 +234,64 @@ class CommunityView(View):
 			'following': following,
 			'follow_requests': follow_requests,
 			'other_users': other_users,
+			'following_requests': following_requests,
 			'num_posts': len(posts),
 			'num_followers': len(followers),
 			'num_following': len(following),
 			'num_follow_requests': len(follow_requests),
-			'num_other_users': len(other_users),
+			'num_other_users': len(other_users) + len(following_requests),
 		})
+
+class AddFollowView(View):
+	@method_decorator(login_required)
+	def get(self, request, userpk):
+		follower = request.user
+		followed = User.objects.get(pk=userpk)
+		follow_model = Follower.objects.all().filter(followed=followed, follower=follower)
+		if not follow_model:
+			follow = Follower(followed=followed, follower=follower, accepted=False)
+			follow.save()
+			return HttpResponseRedirect('/community')
+		else:
+			return HttpResponseRedirect('/community')
+
+
+class AcceptFollowView(View):
+	@method_decorator(login_required)
+	def get(self, request, userpk):
+		followed = request.user
+		follower = User.objects.get(pk=userpk)
+		follow_model = Follower.objects.get(followed=followed, follower=follower)
+		if not follow_model:
+			return HttpResponseRedirect('/community')
+		else:
+			if follow_model.accepted == True:
+				return HttpResponseRedirect('/community')
+			else:
+				follow_model.accepted = True
+				follow_model.save()
+				return HttpResponseRedirect('/community')
+
+class RejectFollowView(View):
+	@method_decorator(login_required)
+	def get(self, request, userpk):
+		followed = request.user
+		follower = User.objects.get(pk=userpk)
+		follow_model = Follower.objects.get(followed=followed, follower=follower)
+		if not follow_model:
+			return HttpResponseRedirect('/community')
+		else:
+			follow_model.delete()
+			return HttpResponseRedirect('/community')
+
+class DeleteFollowView(View):
+	@method_decorator(login_required)
+	def get(self, request, userpk):
+		follower = request.user
+		followed = User.objects.get(pk=userpk)
+		follow_model = Follower.objects.get(followed=followed, follower=follower)
+		if not follow_model:
+			return HttpResponseRedirect('/community')
+		else:
+			follow_model.delete()
+			return HttpResponseRedirect('/community')

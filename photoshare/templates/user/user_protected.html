@@ -1,0 +1,24 @@
+{% extends "app_skeleton.html" %}
+
+{% block app_title %}{{ user.username }}{% endblock %}
+
+{% block app_stylesheets %}
+	<link rel="stylesheet" href="/static/css/user/user_profile.css">
+{% endblock %}
+
+{% block app_content %}
+	<div id="main">
+		<div class="header">
+	    <h1>{{ user.username }}</h1>
+	    <h2>Posts: {{ num_posts }} | Followers: {{ num_followers }} | Following: {{ num_following }}</h2>
+		</div>
+
+		<div class="content">
+	  	<h3>You do not have permission to view this as you have not followed the user.</h3>
+		</div>
+	</div>
+{% endblock %}
+
+{% block app_scripts %}
+	<script src="/static/js/user/user_profile.js"></script>
+{% endblock %}

@@ -45,4 +45,9 @@ urlpatterns = [
         }),
 
     url(r'^community$', views.CommunityView.as_view()),
+    
+    url(r'^follow/add/(?P<userpk>\d{1,10})/$', views.AddFollowView.as_view()),
+    url(r'^follow/accept/(?P<userpk>\d{1,10})/$', views.AcceptFollowView.as_view()),
+    url(r'^follow/reject/(?P<userpk>\d{1,10})/$', views.RejectFollowView.as_view()),
+    url(r'^follow/delete/(?P<userpk>\d{1,10})/$', views.DeleteFollowView.as_view()),
 ]

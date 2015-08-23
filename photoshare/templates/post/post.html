@@ -2,11 +2,64 @@
 
 {% block app_title %}Post{% endblock %}
 
+{% block app_stylesheets %}
+	<link rel="stylesheet" href="/static/css/post/post.css">
+{% endblock %}
+
 {% block app_content %}
 	<div id="main">
-
 		<div class="content">
-	  	
+	  	<img src="{{ post.photo.url }}" class="pure-img">
+	  	<h4>{{ post.date }}</h4>
+	  	<h2 id="description__header">Description</h2>
+	  	<p id="description">{{ post.description }}</p>
+			<h2>Comments</h2>
+			<div class="pure-g">
+				{% for comment in comments %}
+					<div id="comment_{{ comment.pk }}" class="pure-u-1 comment-wrapper">
+						<h3 class="comment__header">{{ comment.user }}:</h3>
+						{% if comment.user.pk == user.pk %}
+							<button class="pure-button button-secondary comment__edit_button" onclick="EditComment({{ comment.pk }})">Edit</button>
+					  	<form method="post" action="/comment/delete/{{ comment.pk }}/" class="comment__delete_form">
+					  		<div style="display:none">
+									<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+								</div>
+					  		<button id="comment__delete_button" type="submit" class="pure-button button-error">Delete Post</button>
+					  	</form>
+					  {% endif %}
+						<p>{{ comment.comment }}</p>
+						<div style="display:none" class="comment__edit_form">
+				  		<form method="post" action="/comment/update/{{ comment.pk }}/" class="pure-form pure-form-stacked">
+								<div style="display:none">
+									<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+								</div>
+							  <fieldset>
+							    <legend>Edit Comment</legend>
+							    <input name="comment" class="pure-input-1" type="text" value="{{ comment.comment }}">
+							    <button type="submit" class="pure-button pure-button-primary">Submit</button>
+							  </fieldset>
+							</form>
+	  				</div>
+						<h6>{{ comment.date }}</h6>
+					</div>
+				{% endfor %}
+			</div>
+			<form method="post" action="/comment/create" class="pure-form pure-form-stacked">
+				<div style="display:none">
+					<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+					<input type="hidden" name="postpk" value="{{ post.pk }}">
+				</div>
+			  <fieldset>
+			    <legend>Add Comment</legend>
+			    <label for="comment">{{ user.username }}</label>
+			    <input name="comment" class="pure-input-1" id="comment" type="text" placeholder="enter your comments here">
+			    <button type="submit" class="pure-button pure-button-primary">Submit</button>
+			  </fieldset>
+			</form>
 		</div>
 	</div>
+{% endblock %}
+
+{% block app_scripts %}
+	<script src="/static/js/post/post.js"></script>
 {% endblock %}

@@ -1,6 +1,6 @@
 {% extends "app_skeleton.html" %}
 
-{% block app_title %}{{ user.username }}{% endblock %}
+{% block app_title %}{{ user_profile.username }}{% endblock %}
 
 {% block app_stylesheets %}
 	<link rel="stylesheet" href="/static/css/user/user_profile.css">
@@ -9,22 +9,24 @@
 {% block app_content %}
 	<div id="main">
 		<div class="header">
-	    <h1>{{ user.username }}</h1>
+	    <h1>{{ user_profile.username }}</h1>
 	    <h2>Posts: {{ num_posts }} | Followers: {{ num_followers }} | Following: {{ num_following }}</h2>
 		</div>
 
 		<div class="content">
-	  	<h2 class="content-subhead">Share your photos:</h2>
-	  	<form method="post" action="/post/create" enctype="multipart/form-data" class="pure-form pure-form-stacked">
-	  		<div style="display:none">
-					<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-				</div>
-		    <fieldset>
-		    	<input name="photo" type="file" accept="image/*" required>
-		      <textarea name="description" class="pure-input-1" id="description" placeholder="Describe your photo" max="1000" required></textarea>
-					<button type="submit" class="pure-button pure-button-primary">Post</button>
-	    	</fieldset>
-			</form>
+			{% if owner %}
+		  	<h2 class="content-subhead">Share your photos:</h2>
+		  	<form method="post" action="/post/create" enctype="multipart/form-data" class="pure-form pure-form-stacked">
+		  		<div style="display:none">
+						<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+					</div>
+			    <fieldset>
+			    	<input name="photo" type="file" accept="image/*" required>
+			      <textarea name="description" class="pure-input-1" id="description" placeholder="Describe your photo" max="1000" required></textarea>
+						<button type="submit" class="pure-button pure-button-primary">Post</button>
+		    	</fieldset>
+				</form>
+			{% endif %}
 
 	    <h2 class="content-subhead">Posts</h2>
 
